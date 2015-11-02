@@ -3,6 +3,7 @@ package main
 import (
     "fmt"
     "io"
+    "io/ioutil"
     "bufio"
     "os"
 )
@@ -40,10 +41,25 @@ func read_in_queue() []string {
 }
 
 
+func load_url(url string) []byte {
+    // load a file from the drive for testing purposes instead
+    file, err := os.Open("test.html")
+    rosebud(err)
+    defer file.Close()
+
+    rootPage, err := ioutil.ReadAll(file)
+    rosebud(err)
+    return rootPage
+}
+
+
 func main() {
     links := read_in_queue()
 
     for i := range links {
-        fmt.Printf("%s", links[i])
+        // loads a test page for the time being
+        rootPage := load_url(links[i])
+        fmt.Printf("%s", rootPage)
+        os.Exit(1)
     }
 }
