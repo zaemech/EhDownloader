@@ -6,6 +6,7 @@ import (
     "io/ioutil"
     "bufio"
     "os"
+    "regexp"
 )
 
 
@@ -59,7 +60,13 @@ func main() {
     for i := range links {
         // loads a test page for the time being
         rootPage := load_url(links[i])
-        fmt.Printf("%s", rootPage)
-        os.Exit(1)
+
+        // {1,5} in case of really huge galleries that I hope to never see.
+        re := regexp.MustCompile(
+            `http://g.e-hentai.org/s/[0-9a-f]{10}/[0-9]{6}-[0-9]{1,5}`)
+
+        imageUrls := re.FindAllString(string(rootPage), -1)
+
+        fmt.Printf("%s", imageUrls)
     }
 }
