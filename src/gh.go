@@ -8,6 +8,7 @@ import (
     "os"
     "regexp"
     "net/http"
+    "strings"
     "strconv"
 )
 
@@ -112,13 +113,21 @@ func main() {
         }
 
         rootPage := load_url(links[i])
+        numPage := determine_num_pages(rootPage)
 
+        for p := 0; p <= numPage; p++ {
+            imageUrls := imgre.FindAllString(string(rootPage), -1)
 
-        imageUrls := imgre.FindAllString(string(rootPage), -1)
-        for q := range imageUrls {
-            download_image(imageUrls[q])
+            for q := range imageUrls {
+                download_image(imageUrls[q])
+            }
+
+            if p < numPage {
+                galleryPage := strings.TrimSpace(links[i])
+                galleryPage = strings.Join([]string{galleryPage, "?p="}, "")
+                galleryPage += strconv.Itoa(p+1)
+                rootPage = load_url(galleryPage)
+            }
         }
-
-        fmt.Printf("%s", imageUrls)
     }
 }
