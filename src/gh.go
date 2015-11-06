@@ -66,6 +66,27 @@ func load_url_2(url string) []byte {
 }
 
 
+func download_image(url string) {
+    imgPage := load_url(url)
+    re := regexp.MustCompile(
+        `http://(\d{1,3}[\.\:\/]){4}[0-9]{0,5}.*?\.(jpg||png||gif)`)
+
+    imgUrl := re.FindString(string(imgPage))
+
+    // strip everything in imgUrl after the last / for the filename
+    offset := strings.LastIndex(imgUrl, `/`)
+    filename := imgUrl[offset + 1:]
+    fmt.Printf("%s\n", filename)
+
+    response, err := http.Get(imgUrl)
+    rosebud(err)
+    image, err := ioutil.ReadAll(response.Body)
+    rosebud(err)
+    err = ioutil.WriteFile(filename, image, 0777)
+    rosebud(err)
+}
+
+
 func main() {
     links := read_in_queue()
 
@@ -82,6 +103,9 @@ func main() {
             `http://g.e-hentai.org/s/[0-9a-f]{10}/[0-9]{6}-[0-9]{1,5}`)
 
         imageUrls := re.FindAllString(string(rootPage), -1)
+        for q := range imageUrls {
+            download_image(imageUrls[q])
+        }
 
         fmt.Printf("%s", imageUrls)
     }
