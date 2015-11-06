@@ -7,6 +7,7 @@ import (
     "bufio"
     "os"
     "regexp"
+    "net/http"
 )
 
 
@@ -42,7 +43,18 @@ func read_in_queue() []string {
 }
 
 
-func load_url(url string) []byte {
+func load_url(url string) string {
+    response, err := http.Get(url)
+    rosebud(err)
+
+    defer response.Body.Close()
+    contents, err := ioutil.ReadAll(response.Body)
+    rosebud(err)
+    return string(contents)
+}
+
+
+func load_url_2(url string) []byte {
     // load a file from the drive for testing purposes instead
     file, err := os.Open("test.html")
     rosebud(err)
