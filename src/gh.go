@@ -95,7 +95,6 @@ func main() {
             break
         }
 
-        // loads a test page for the time being
         rootPage := load_url(links[i])
 
         // {1,5} in case of really huge galleries that I hope to never see.
