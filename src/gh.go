@@ -89,6 +89,8 @@ func download_image(url string) {
 
 func main() {
     links := read_in_queue()
+    imgre := regexp.MustCompile(
+        `http://g.e-hentai.org/s/[\da-f]{10}/\d{6}-\d+`)
 
     for i := range links {
         if len(links[i]) == 0 {
@@ -97,11 +99,8 @@ func main() {
 
         rootPage := load_url(links[i])
 
-        // {1,5} in case of really huge galleries that I hope to never see.
-        re := regexp.MustCompile(
-            `http://g.e-hentai.org/s/[0-9a-f]{10}/[0-9]{6}-[0-9]{1,5}`)
 
-        imageUrls := re.FindAllString(string(rootPage), -1)
+        imageUrls := imgre.FindAllString(string(rootPage), -1)
         for q := range imageUrls {
             download_image(imageUrls[q])
         }
