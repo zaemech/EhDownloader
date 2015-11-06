@@ -8,6 +8,7 @@ import (
     "os"
     "regexp"
     "net/http"
+    "strconv"
 )
 
 
@@ -84,6 +85,19 @@ func download_image(url string) {
     rosebud(err)
     err = ioutil.WriteFile(filename, image, 0777)
     rosebud(err)
+}
+
+
+func determine_num_pages(rootPage string) int {
+    repage := regexp.MustCompile(`sp\(\d+\)`)
+    temp := repage.FindAllString(string(rootPage), -1)
+    numPage := 0
+
+    if len(temp) >= 1 {
+        t := temp[len(temp)-2][3:]
+        numPage, _ = strconv.Atoi(t[:len(t)-1])
+    }
+    return numPage
 }
 
 
