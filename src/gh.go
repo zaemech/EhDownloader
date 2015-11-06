@@ -70,6 +70,10 @@ func main() {
     links := read_in_queue()
 
     for i := range links {
+        if len(links[i]) == 0 {
+            break
+        }
+
         // loads a test page for the time being
         rootPage := load_url(links[i])
 
