@@ -101,8 +101,7 @@ func determine_num_pages(rootPage string) int {
     return numPage
 }
 
-
-func main() {
+/*
     links := read_in_queue()
     imgre := regexp.MustCompile(
         `http://g.e-hentai.org/s/[\da-f]{10}/\d{6}-\d+`)
@@ -129,5 +128,26 @@ func main() {
                 rootPage = load_url(galleryPage)
             }
         }
+    }
+*/
+
+
+func main() {
+	if len(os.Args) < 2 {
+        fmt.Printf("Usage information to come.\n")
+        // display usage
+        return
+    }
+
+    args := os.Args[1:]
+
+    if args[0] == "download" {
+        fmt.Printf("download not implemented.\n")
+        //download(args[1:])
+    } else if args[0] == "info" {
+        info(args[1:])
+    } else {
+        fmt.Printf("Usage information to come.\n")
+        // display usage
     }
 }
