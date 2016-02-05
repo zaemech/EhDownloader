@@ -1,5 +1,14 @@
 package main
 
+import (
+    "fmt"
+    "io/ioutil"
+    "os"
+    "regexp"
+    "net/http"
+    "strings"
+)
+
 func load_url(url string) string {
     response, err := http.Get(url)
     rosebud(err)

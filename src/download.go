@@ -1,5 +1,14 @@
 package main
 
+import (
+    "fmt"
+    "io"
+    "bufio"
+    "os"
+    "regexp"
+    "strconv"
+)
+
 func read_in_queue() []string {
     var links []string
 
