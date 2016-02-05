@@ -46,32 +46,15 @@ func determine_num_pages(rootPage string) int {
 }
 
 
-def download() {
-    links := read_in_queue()
-    imgre := regexp.MustCompile(
-        `http://g.e-hentai.org/s/[\da-f]{10}/\d{6}-\d+`)
 
-    for i := range links {
-        if len(links[i]) == 0 {
-            break
-        }
 
-        rootPage := load_url(links[i])
-        numPage := determine_num_pages(rootPage)
-
-        for p := 0; p <= numPage; p++ {
-            imageUrls := imgre.FindAllString(string(rootPage), -1)
-
-            for q := range imageUrls {
-                download_image(imageUrls[q])
-            }
-
-            if p < numPage {
-                galleryPage := strings.TrimSpace(links[i])
-                galleryPage = strings.Join([]string{galleryPage, "?p="}, "")
-                galleryPage += strconv.Itoa(p+1)
-                rootPage = load_url(galleryPage)
-            }
-        }
+func download(args []string) {
+    if len(args) < 1 {
+        usage()
+        return
     }
+
+    rootPage := load_url(args[0])
+    numPage := determine_num_pages(rootPage)
+    fmt.Println(numPage)
 }
