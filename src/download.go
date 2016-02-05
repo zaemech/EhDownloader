@@ -6,7 +6,9 @@ import (
     "bufio"
     "os"
     "regexp"
+    "strings"
     "strconv"
+    "math"
 )
 
 func read_in_queue() []string {
@@ -33,16 +35,22 @@ func read_in_queue() []string {
 }
 
 
-func determine_num_pages(rootPage string) int {
-    repage := regexp.MustCompile(`sp\(\d+\)`)
-    temp := repage.FindAllString(string(rootPage), -1)
-    numPage := 0
+func count_pages(rootPage string) int {
+    regex := regexp.MustCompile(`Showing \d+ - \d+ of \d+ images`)
+    result := regex.FindString(rootPage)
 
-    if len(temp) >= 1 {
-        t := temp[len(temp)-2][3:]
-        numPage, _ = strconv.Atoi(t[:len(t)-1])
+    tmp := strings.Split(result, " ")
+    images, _ := strconv.Atoi(tmp[3])
+    total,  _ := strconv.Atoi(tmp[5])
+
+    if images == total {
+        return 1
+    } else if images <= total {
+        return int(math.Ceil(float64(total) / float64(images)))
     }
-    return numPage
+
+    // more images on the page than there are in the gallery?
+    return 0
 }
 
 
@@ -55,6 +63,6 @@ func download(args []string) {
     }
 
     rootPage := load_url(args[0])
-    numPage := determine_num_pages(rootPage)
+    numPage := count_pages(rootPage)
     fmt.Println(numPage)
 }
