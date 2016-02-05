@@ -2,14 +2,7 @@ package main
 
 import (
     "fmt"
-//    "io"
-//    "io/ioutil"
-//    "bufio"
     "os"
-//    "regexp"
-//    "net/http"
-//    "strings"
-//    "strconv"
 )
 
 
@@ -20,23 +13,26 @@ func rosebud(err error) {
     }
 }
 
+func usage() {
+    fmt.Println("Download gallery\n",
+                "  $ download [url]\n",
+                "Download a list of galleries (NOT IMPLEMENTED)\n",
+                "  $ download -f [file]\n")
+}
 
 func main() {
-	if len(os.Args) < 2 {
-        fmt.Printf("Usage information to come.\n")
-        // display usage
+    if len(os.Args) < 2 {
+        usage()
         return
     }
 
     args := os.Args[1:]
 
     if args[0] == "download" {
-        fmt.Printf("download not implemented.\n")
-        //download(args[1:])
+        download(args[1:])
     } else if args[0] == "info" {
-        info(args[1:])
+        //info(args[1:])
     } else {
-        fmt.Printf("Usage information to come.\n")
-        // display usage
+        usage()
     }
 }
