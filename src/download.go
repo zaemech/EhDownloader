@@ -54,6 +54,18 @@ func count_pages(rootPage string) int {
 }
 
 
+func clean_url(dirtyUrl string) string {
+    regex := regexp.MustCompile(`\d{6}/[\da-f]{10}`)
+    tmp := regex.FindString(dirtyUrl)
+
+    if tmp == "" {
+        return ""
+    }
+
+    // eventually work with exhentai too
+    url := "http://g.e-hentai.org/g/" + tmp + "/"
+    return url
+}
 
 
 func download(args []string) {
@@ -62,7 +74,7 @@ func download(args []string) {
         return
     }
 
-    rootPage := load_url(args[0])
+    rootPage := load_url(clean_url(args[0]))
     numPage := count_pages(rootPage)
     fmt.Println(numPage)
 }
