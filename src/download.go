@@ -93,6 +93,20 @@ func get_img_pages(rootUrl string) []string {
 }
 
 
+func get_img_urls(imgPages []string) []string {
+    var imgUrls []string
+    imgRegex := regexp.MustCompile(
+        `http://(\d{1,3}[\.\:\/]){4}[0-9]{0,5}.*?\.(jpg||png||gif)`)
+
+    for _, url := range imgPages {
+        page := load_url(url)
+        tmpUrl := imgRegex.FindString(page)
+        imgUrls = append(imgUrls, tmpUrl)
+    }
+    return imgUrls
+}
+
+
 func download(args []string) {
     if len(args) < 1 {
         usage()
@@ -106,4 +120,5 @@ func download(args []string) {
     }
 
     imgPages := get_img_pages(rootUrl)
+    imgUrls  := get_img_urls(imgPages)
 }
