@@ -68,13 +68,42 @@ func clean_url(dirtyUrl string) string {
 }
 
 
+func get_img_pages(rootUrl string) []string {
+    var imgPages []string
+
+    rootPage := load_url(rootUrl)
+    numPages := count_pages(rootPage)
+
+    imgPageRegex := regexp.MustCompile(
+        `http://g.e-hentai.org/s/[\da-f]{10}/\d{6}-\d+`)
+
+    // TODO: ignore pages referenced in the comments.
+    // Probably something like getting the number of images on
+    // the page and replacing the -1 in the next line with that.
+    imgPages = imgPageRegex.FindAllString(rootPage, -1)
+
+    for page := 1; page <= numPages - 1; page++ {
+        tmpUrl := rootUrl + "?p=" + strconv.Itoa(page)
+        rootPage = load_url(tmpUrl)
+        tmpPages := imgPageRegex.FindAllString(rootPage, -1)
+        imgPages = append(imgPages, tmpPages...)
+    }
+
+    return imgPages
+}
+
+
 func download(args []string) {
     if len(args) < 1 {
         usage()
         return
     }
 
-    rootPage := load_url(clean_url(args[0]))
-    numPage := count_pages(rootPage)
-    fmt.Println(numPage)
+    rootUrl := clean_url(args[0])
+    if rootUrl == "" {
+        fmt.Printf("Malformed gallery url")
+        os.Exit(1)
+    }
+
+    imgPages := get_img_pages(rootUrl)
 }
