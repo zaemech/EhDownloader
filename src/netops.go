@@ -4,7 +4,6 @@ import (
     "fmt"
     "io/ioutil"
     "os"
-    "regexp"
     "net/http"
     "strings"
 )
@@ -32,13 +31,7 @@ func load_url_2(url string) []byte {
 }
 
 
-func download_image(url string) {
-    imgPage := load_url(url)
-    re := regexp.MustCompile(
-        `http://(\d{1,3}[\.\:\/]){4}[0-9]{0,5}.*?\.(jpg||png||gif)`)
-
-    imgUrl := re.FindString(string(imgPage))
-
+func download_image(imgUrl string) {
     // strip everything in imgUrl after the last / for the filename
     offset := strings.LastIndex(imgUrl, `/`)
     filename := imgUrl[offset + 1:]
