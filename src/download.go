@@ -55,7 +55,7 @@ func count_pages(rootPage string) int {
 
 
 func clean_url(dirtyUrl string) string {
-    regex := regexp.MustCompile(`\d{6}/[\da-f]{10}`)
+    regex := regexp.MustCompile(`\d{1,7}/[\da-f]{10}`)
     tmp := regex.FindString(dirtyUrl)
 
     if tmp == "" {
@@ -75,7 +75,7 @@ func get_img_pages(rootUrl string) []string {
     numPages := count_pages(rootPage)
 
     imgPageRegex := regexp.MustCompile(
-        `http://g.e-hentai.org/s/[\da-f]{10}/\d{6}-\d+`)
+        `http://g.e-hentai.org/s/[\da-f]{10}/\d{1,7}-\d+`)
 
     // TODO: ignore pages referenced in the comments.
     // Probably something like getting the number of images on
