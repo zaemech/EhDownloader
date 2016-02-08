@@ -115,7 +115,7 @@ func download(args []string) {
 
     rootUrl := clean_url(args[0])
     if rootUrl == "" {
-        fmt.Printf("Malformed gallery url")
+        fmt.Printf("Malformed gallery url\n")
         os.Exit(1)
     }
 
