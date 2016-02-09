@@ -35,22 +35,23 @@ func read_in_queue() []string {
 }
 
 
-func count_pages(rootPage string) int {
+func count_pages(rootPage string) (int, int) {
     regex := regexp.MustCompile(`Showing \d+ - \d+ of \d+ images`)
     result := regex.FindString(rootPage)
 
     tmp := strings.Split(result, " ")
+    start,  _ := strconv.Atoi(tmp[1])
     images, _ := strconv.Atoi(tmp[3])
     total,  _ := strconv.Atoi(tmp[5])
 
+    imgsOnPage := images - (start - 1)
     if images == total {
-        return 1
+        return 1, imgsOnPage
     } else if images <= total {
-        return int(math.Ceil(float64(total) / float64(images)))
+        return int(math.Ceil(float64(total) / float64(images))), imgsOnPage
     }
 
-    // more images on the page than there are in the gallery?
-    return 0
+    return 0, 0
 }
 
 
@@ -72,20 +73,18 @@ func get_img_pages(rootUrl string) []string {
     var imgPages []string
 
     rootPage := load_url(rootUrl)
-    numPages := count_pages(rootPage)
+    numPages, imgCount := count_pages(rootPage)
 
     imgPageRegex := regexp.MustCompile(
         `http://g.e-hentai.org/s/[\da-f]{10}/\d{1,7}-\d+`)
 
-    // TODO: ignore pages referenced in the comments.
-    // Probably something like getting the number of images on
-    // the page and replacing the -1 in the next line with that.
-    imgPages = imgPageRegex.FindAllString(rootPage, -1)
+    imgPages = imgPageRegex.FindAllString(rootPage, imgCount)
 
     for page := 1; page <= numPages - 1; page++ {
         tmpUrl := rootUrl + "?p=" + strconv.Itoa(page)
         rootPage = load_url(tmpUrl)
-        tmpPages := imgPageRegex.FindAllString(rootPage, -1)
+        _, imgCount = count_pages(rootPage)
+        tmpPages := imgPageRegex.FindAllString(rootPage, imgCount)
         imgPages = append(imgPages, tmpPages...)
     }
 
