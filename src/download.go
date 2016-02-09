@@ -9,6 +9,7 @@ import (
     "strings"
     "strconv"
     "math"
+    "io/ioutil"
 )
 
 func read_in_queue() []string {
@@ -120,4 +121,10 @@ func download(args []string) {
 
     imgPages := get_img_pages(rootUrl)
     imgUrls  := get_img_urls(imgPages)
+
+    for _, t := range imgUrls {
+        image, filename := download_image(t)
+        err := ioutil.WriteFile(filename, image, 0755)
+        rosebud(err)
+    }
 }

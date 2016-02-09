@@ -1,7 +1,6 @@
 package main
 
 import (
-    "fmt"
     "io/ioutil"
     "os"
     "net/http"
@@ -11,8 +10,8 @@ import (
 func load_url(url string) string {
     response, err := http.Get(url)
     rosebud(err)
-
     defer response.Body.Close()
+
     contents, err := ioutil.ReadAll(response.Body)
     rosebud(err)
     return string(contents)
@@ -31,16 +30,16 @@ func load_url_2(url string) []byte {
 }
 
 
-func download_image(imgUrl string) {
+func download_image(imgUrl string) ([]byte, string) {
     // strip everything in imgUrl after the last / for the filename
     offset := strings.LastIndex(imgUrl, `/`)
     filename := imgUrl[offset + 1:]
-    fmt.Printf("%s\n", filename)
 
     response, err := http.Get(imgUrl)
     rosebud(err)
+    defer response.Body.Close()
+
     image, err := ioutil.ReadAll(response.Body)
     rosebud(err)
-    err = ioutil.WriteFile(filename, image, 0777)
-    rosebud(err)
+    return image, filename
 }
